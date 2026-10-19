@@ -225,7 +225,7 @@ _BASE_OWNERS: dict[str, tuple[str, ...]] = {
         _project_tree_identity _project_tree_is_link _project_tree_scandir
         _project_tree_scandir_entries _project_tree_walk api_project_tree
         """.split()),
-    "dashboard_config": ("api_dashboard_config",),
+    "dashboard_config": ("_resolved_codebase_anchors", "api_dashboard_config"),
     "path_probe": tuple("""
         _PathProbe _PathProbeBusy _probe_busy_response _probe_request_path _run_path_probe
         _validate_dashboard_path
@@ -255,7 +255,9 @@ _OWNER_CONSTANTS = {"git_panel": ("_GIT_PANEL_STDOUT_CAP",)}
 #: project-tree walk replaced the ``project_tree`` helpers.
 #: Recaptured with the ``path_probe``, ``outbox``, ``channel_upload``, ``desktop`` and
 #: ``editor`` owners, from the base file, where each of their names had the same shape.
-_BASE_SHAPE_DIGEST = "65c4f9e11ec674f56489bb76f0c456811a262047983e711248ab01ad828beeca"
+#: Recaptured again when ``dashboard_config`` gained ``_resolved_codebase_anchors`` (the
+#: sidebar codebase lane's realpath'd gateway-default anchors).
+_BASE_SHAPE_DIGEST = "e37c31a0a25879abb78c7ed284b27183c248a6e54e831c121a9d57c684303bf4"
 #: Definitions that stay in the facade file: the seams the owners share -- the SEL
 #: accessor, the file-send audit, the sub-agent session mapping and the request-body
 #: error code -- the search walk's clock, the file viewer's owner-view verdict, whose
@@ -483,7 +485,7 @@ def test_every_moved_name_is_one_object_in_its_owner() -> None:
     ]
     assert strays == []
     names = [name for group in _BASE_OWNERS.values() for name in group]
-    assert len(names) == len(set(names)) == 131
+    assert len(names) == len(set(names)) == 132
 
 
 def test_the_moved_names_keep_their_base_shapes() -> None:
@@ -492,7 +494,7 @@ def test_the_moved_names_keep_their_base_shapes() -> None:
         for names in _BASE_OWNERS.values()
         for name in names
     )
-    assert len(lines) == 131
+    assert len(lines) == 132
     digest = hashlib.sha256("\n".join(lines).encode()).hexdigest()
     assert digest == _BASE_SHAPE_DIGEST, "\n".join(lines)
 
@@ -545,7 +547,7 @@ def test_every_base_definition_is_in_exactly_one_place() -> None:
     }
     assert defined == set(_FACADE_DEFS)
     moved = {name for names in _BASE_OWNERS.values() for name in names}
-    assert len(defined | moved) == len(defined) + len(moved) == 139
+    assert len(defined | moved) == len(defined) + len(moved) == 140
 
 
 def test_the_owners_log_as_the_facade() -> None:
